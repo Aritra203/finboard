@@ -179,7 +179,6 @@ const useDashboardStore = (0, __TURBOPACK__imported__module__$5b$project$5d2f$no
 "[project]/src/lib/cache.ts [app-ssr] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
 
-// API Response Cache with TTL support
 __turbopack_context__.s([
     "apiCache",
     ()=>apiCache
@@ -188,9 +187,7 @@ class APICache {
     cache = new Map();
     rateLimits = new Map();
     defaultTTL = 30000;
-    /**
-   * Get cached data if valid
-   */ get(url) {
+    get(url) {
         const entry = this.cache.get(url);
         if (!entry) return null;
         const now = Date.now();
@@ -200,9 +197,7 @@ class APICache {
         }
         return entry.data;
     }
-    /**
-   * Set cache entry with TTL
-   */ set(url, data, ttlMs) {
+    set(url, data, ttlMs) {
         const now = Date.now();
         this.cache.set(url, {
             data,
@@ -210,9 +205,7 @@ class APICache {
             expiresAt: now + (ttlMs || this.defaultTTL)
         });
     }
-    /**
-   * Check if URL is rate limited
-   */ isRateLimited(url) {
+    isRateLimited(url) {
         const domain = this.extractDomain(url);
         const info = this.rateLimits.get(domain);
         if (!info) return {
@@ -231,9 +224,7 @@ class APICache {
             retryAfter: Math.ceil(timeLeft / 1000)
         };
     }
-    /**
-   * Mark URL domain as rate limited
-   */ setRateLimited(url, retryAfterSeconds = 60) {
+    setRateLimited(url, retryAfterSeconds = 60) {
         const domain = this.extractDomain(url);
         this.rateLimits.set(domain, {
             url: domain,
@@ -241,28 +232,20 @@ class APICache {
             hitAt: Date.now()
         });
     }
-    /**
-   * Clear rate limit for a domain
-   */ clearRateLimit(url) {
+    clearRateLimit(url) {
         const domain = this.extractDomain(url);
         this.rateLimits.delete(domain);
     }
-    /**
-   * Get cache statistics
-   */ getStats() {
+    getStats() {
         return {
             cacheSize: this.cache.size,
             rateLimitedDomains: Array.from(this.rateLimits.keys())
         };
     }
-    /**
-   * Clear all cache
-   */ clear() {
+    clear() {
         this.cache.clear();
     }
-    /**
-   * Clear expired entries
-   */ cleanup() {
+    cleanup() {
         const now = Date.now();
         for (const [key, entry] of this.cache.entries()){
             if (now > entry.expiresAt) {
@@ -270,9 +253,7 @@ class APICache {
             }
         }
     }
-    /**
-   * Extract domain from URL for rate limiting
-   */ extractDomain(url) {
+    extractDomain(url) {
         try {
             const urlObj = new URL(url);
             return urlObj.hostname;
@@ -282,7 +263,6 @@ class APICache {
     }
 }
 const apiCache = new APICache();
-// Cleanup interval (every 5 minutes)
 if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
 ;
 }),
@@ -485,7 +465,6 @@ async function fetchWithCache(url, options = {}) {
     };
 }
 function clearCacheForUrl(url) {
-    // The cache doesn't expose a delete method, so we'll add one
     __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$cache$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["apiCache"].clear();
 }
 function getCacheStats() {
@@ -1129,7 +1108,6 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$
 ;
 ;
 ;
-// Custom Candlestick shape
 const Candlestick = (props)=>{
     const { x, y, width, height, open, close, high, low } = props;
     const isGreen = close >= open;
@@ -1147,7 +1125,7 @@ const Candlestick = (props)=>{
                 strokeWidth: 1
             }, void 0, false, {
                 fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                lineNumber: 59,
+                lineNumber: 68,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("rect", {
@@ -1159,13 +1137,13 @@ const Candlestick = (props)=>{
                 stroke: color
             }, void 0, false, {
                 fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                lineNumber: 68,
+                lineNumber: 76,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0))
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-        lineNumber: 57,
+        lineNumber: 67,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
@@ -1173,7 +1151,6 @@ function WidgetCard({ widget, onEdit }) {
     const { removeWidget, setWidgetData, setWidgetLoading, setWidgetError, updateWidget, setWebSocketStatus } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$store$2f$dashboardStore$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useDashboardStore"])();
     const intervalRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(null);
     const wsManagerRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(null);
-    // Table state
     const [tableSearch, setTableSearch] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
     const [currentPage, setCurrentPage] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(1);
     const [sortColumn, setSortColumn] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
@@ -1186,7 +1163,7 @@ function WidgetCard({ widget, onEdit }) {
         transform: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$dnd$2d$kit$2f$utilities$2f$dist$2f$utilities$2e$esm$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CSS"].Transform.toString(transform),
         transition
     };
-    const fetchData = async (skipCache = false)=>{
+    const fetchData = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])(async (skipCache = false)=>{
         setWidgetLoading(widget.id, true);
         const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$apiUtils$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["fetchWithCache"])(widget.apiUrl, {
             useCache: !skipCache,
@@ -1202,8 +1179,15 @@ function WidgetCard({ widget, onEdit }) {
             setWidgetError(widget.id, result.error || 'Failed to fetch data');
         }
         setWidgetLoading(widget.id, false);
-    };
-    const setupWebSocket = ()=>{
+    }, [
+        widget.id,
+        widget.apiUrl,
+        widget.refreshInterval,
+        setWidgetLoading,
+        setWidgetData,
+        setWidgetError
+    ]);
+    const setupWebSocket = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])(()=>{
         if (widget.connectionType !== 'websocket' || !(0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$websocket$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["isWebSocketURL"])(widget.apiUrl)) return;
         setWidgetLoading(widget.id, true);
         setWebSocketStatus(widget.id, 'connecting');
@@ -1229,8 +1213,16 @@ function WidgetCard({ widget, onEdit }) {
                 setWidgetLoading(widget.id, false);
             }
         });
-    };
-    const cleanup = ()=>{
+    }, [
+        widget.id,
+        widget.apiUrl,
+        widget.connectionType,
+        setWidgetLoading,
+        setWebSocketStatus,
+        setWidgetData,
+        setWidgetError
+    ]);
+    const cleanup = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])(()=>{
         if (intervalRef.current) {
             clearInterval(intervalRef.current);
             intervalRef.current = null;
@@ -1239,9 +1231,11 @@ function WidgetCard({ widget, onEdit }) {
             __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$websocket$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["wsPool"].disconnect(widget.id);
             wsManagerRef.current = null;
         }
-    };
+    }, [
+        widget.id
+    ]);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
-        cleanup(); // Clean up any existing connections
+        cleanup();
         if (widget.connectionType === 'websocket') {
             setupWebSocket();
         } else {
@@ -1252,9 +1246,11 @@ function WidgetCard({ widget, onEdit }) {
     }, [
         widget.apiUrl,
         widget.refreshInterval,
-        widget.connectionType
+        widget.connectionType,
+        setupWebSocket,
+        fetchData,
+        cleanup
     ]);
-    // Reset page when search changes
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         setCurrentPage(1);
     }, [
@@ -1284,7 +1280,7 @@ function WidgetCard({ widget, onEdit }) {
                             children: field.label.replace(/[._]/g, ' ')
                         }, void 0, false, {
                             fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                            lineNumber: 203,
+                            lineNumber: 209,
                             columnNumber: 15
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1292,19 +1288,19 @@ function WidgetCard({ widget, onEdit }) {
                             children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$apiUtils$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["formatValue"])(value)
                         }, void 0, false, {
                             fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                            lineNumber: 206,
+                            lineNumber: 212,
                             columnNumber: 15
                         }, this)
                     ]
                 }, field.path, true, {
                     fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                    lineNumber: 202,
+                    lineNumber: 208,
                     columnNumber: 13
                 }, this);
             })
         }, void 0, false, {
             fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-            lineNumber: 198,
+            lineNumber: 204,
             columnNumber: 7
         }, this);
     };
@@ -1333,11 +1329,10 @@ function WidgetCard({ widget, onEdit }) {
             children: "No data available"
         }, void 0, false, {
             fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-            lineNumber: 237,
+            lineNumber: 243,
             columnNumber: 40
         }, this);
         const columns = Object.keys(tableData[0] || {}).slice(0, 5);
-        // Filter data based on search
         const filteredData = tableSearch ? tableData.filter((row)=>columns.some((col)=>String(row[col]).toLowerCase().includes(tableSearch.toLowerCase()))) : tableData;
         // Sort data
         const sortedData = sortColumn ? [
@@ -1368,7 +1363,6 @@ function WidgetCard({ widget, onEdit }) {
                 setSortDirection('asc');
             }
         };
-        // Pagination
         const totalPages = Math.ceil(sortedData.length / itemsPerPage);
         const startIndex = (currentPage - 1) * itemsPerPage;
         const paginatedData = sortedData.slice(startIndex, startIndex + itemsPerPage);
@@ -1382,7 +1376,7 @@ function WidgetCard({ widget, onEdit }) {
                             className: "absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground"
                         }, void 0, false, {
                             fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                            lineNumber: 292,
+                            lineNumber: 296,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -1392,13 +1386,13 @@ function WidgetCard({ widget, onEdit }) {
                             className: "h-8 pl-7 text-xs bg-secondary/30 border-border/50"
                         }, void 0, false, {
                             fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                            lineNumber: 293,
+                            lineNumber: 297,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                    lineNumber: 291,
+                    lineNumber: 295,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1419,40 +1413,40 @@ function WidgetCard({ widget, onEdit }) {
                                                         className: "w-3 h-3"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                                        lineNumber: 316,
+                                                        lineNumber: 320,
                                                         columnNumber: 27
                                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$arrow$2d$down$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowDown$3e$__["ArrowDown"], {
                                                         className: "w-3 h-3"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                                        lineNumber: 318,
+                                                        lineNumber: 322,
                                                         columnNumber: 27
                                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$arrow$2d$up$2d$down$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowUpDown$3e$__["ArrowUpDown"], {
                                                         className: "w-3 h-3 opacity-30"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                                        lineNumber: 321,
+                                                        lineNumber: 325,
                                                         columnNumber: 25
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                                lineNumber: 312,
+                                                lineNumber: 316,
                                                 columnNumber: 21
                                             }, this)
                                         }, col, false, {
                                             fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                            lineNumber: 307,
+                                            lineNumber: 311,
                                             columnNumber: 19
                                         }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                    lineNumber: 305,
+                                    lineNumber: 309,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                lineNumber: 304,
+                                lineNumber: 308,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TableBody"], {
@@ -1463,28 +1457,28 @@ function WidgetCard({ widget, onEdit }) {
                                                 children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$apiUtils$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["formatValue"])(row[col])
                                             }, col, false, {
                                                 fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                                lineNumber: 332,
+                                                lineNumber: 336,
                                                 columnNumber: 21
                                             }, this))
                                     }, i, false, {
                                         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                        lineNumber: 330,
+                                        lineNumber: 334,
                                         columnNumber: 17
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                lineNumber: 328,
+                                lineNumber: 332,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                        lineNumber: 303,
+                        lineNumber: 307,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                    lineNumber: 302,
+                    lineNumber: 306,
                     columnNumber: 9
                 }, this),
                 totalPages > 1 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1500,7 +1494,7 @@ function WidgetCard({ widget, onEdit }) {
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                            lineNumber: 345,
+                            lineNumber: 349,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1516,12 +1510,12 @@ function WidgetCard({ widget, onEdit }) {
                                         className: "w-3 h-3"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                        lineNumber: 356,
+                                        lineNumber: 360,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                    lineNumber: 349,
+                                    lineNumber: 353,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1532,7 +1526,7 @@ function WidgetCard({ widget, onEdit }) {
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                    lineNumber: 358,
+                                    lineNumber: 362,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -1545,30 +1539,30 @@ function WidgetCard({ widget, onEdit }) {
                                         className: "w-3 h-3"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                        lineNumber: 366,
+                                        lineNumber: 370,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                    lineNumber: 359,
+                                    lineNumber: 363,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                            lineNumber: 348,
+                            lineNumber: 352,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                    lineNumber: 344,
+                    lineNumber: 348,
                     columnNumber: 11
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-            lineNumber: 289,
+            lineNumber: 293,
             columnNumber: 7
         }, this);
     };
@@ -1576,7 +1570,6 @@ function WidgetCard({ widget, onEdit }) {
         if (!widget.data) return null;
         const chartType = widget.chartType || 'line';
         const chartInterval = widget.chartInterval || 'daily';
-        // Try to find numeric data for charting
         const numericFields = widget.selectedFields.filter((f)=>f.type === 'number' || f.type === 'string');
         if (numericFields.length === 0) {
             return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1584,15 +1577,13 @@ function WidgetCard({ widget, onEdit }) {
                 children: "No numeric data for chart"
             }, void 0, false, {
                 fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                lineNumber: 387,
+                lineNumber: 390,
                 columnNumber: 14
             }, this);
         }
-        // Create chart data
         const chartData = numericFields.slice(0, 6).map((field, index)=>{
             const value = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$apiUtils$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getValueByPath"])(widget.data, field.path);
             const numValue = typeof value === 'number' ? value : parseFloat(String(value)) || 0;
-            // Generate mock OHLC data for candlestick
             const variance = numValue * 0.02;
             return {
                 name: field.label.slice(0, 10),
@@ -1603,7 +1594,6 @@ function WidgetCard({ widget, onEdit }) {
                 close: numValue + variance * (Math.random() - 0.5)
             };
         });
-        // Interval selector
         const intervals = [
             {
                 value: 'daily',
@@ -1754,12 +1744,13 @@ function WidgetCard({ widget, onEdit }) {
                                     dataKey: "close",
                                     fill: "hsl(var(--primary))",
                                     shape: (props)=>{
-                                        const { x, y, width, payload } = props;
+                                        const { x, y, width, height, payload } = props;
                                         const yScale = props.background?.height / (Math.max(...chartData.map((d)=>d.high)) - Math.min(...chartData.map((d)=>d.low))) || 1;
                                         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Candlestick, {
                                             x: x,
                                             y: y,
                                             width: width,
+                                            height: height,
                                             open: payload.open,
                                             close: payload.close,
                                             high: payload.high,
@@ -1794,7 +1785,7 @@ function WidgetCard({ widget, onEdit }) {
                                     stroke: "hsl(var(--border))"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                    lineNumber: 498,
+                                    lineNumber: 499,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$XAxis$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["XAxis"], {
@@ -1808,7 +1799,7 @@ function WidgetCard({ widget, onEdit }) {
                                     }
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                    lineNumber: 499,
+                                    lineNumber: 500,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$YAxis$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["YAxis"], {
@@ -1821,7 +1812,7 @@ function WidgetCard({ widget, onEdit }) {
                                     }
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                    lineNumber: 504,
+                                    lineNumber: 505,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$component$2f$Tooltip$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Tooltip"], {
@@ -1835,7 +1826,7 @@ function WidgetCard({ widget, onEdit }) {
                                     }
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                    lineNumber: 508,
+                                    lineNumber: 509,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$recharts$2f$es6$2f$cartesian$2f$Line$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Line"], {
@@ -1853,13 +1844,13 @@ function WidgetCard({ widget, onEdit }) {
                                     }
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                    lineNumber: 516,
+                                    lineNumber: 517,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                            lineNumber: 497,
+                            lineNumber: 498,
                             columnNumber: 15
                         }, this)
                     }, void 0, false, {
@@ -1887,12 +1878,12 @@ function WidgetCard({ widget, onEdit }) {
                     className: "w-6 h-6 animate-spin text-primary"
                 }, void 0, false, {
                     fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                    lineNumber: 536,
+                    lineNumber: 537,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                lineNumber: 535,
+                lineNumber: 536,
                 columnNumber: 9
             }, this);
         }
@@ -1909,12 +1900,12 @@ function WidgetCard({ widget, onEdit }) {
                             className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["cn"])("w-8 h-8", isRateLimited ? "text-orange-500" : "text-destructive")
                         }, void 0, false, {
                             fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                            lineNumber: 552,
+                            lineNumber: 553,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                        lineNumber: 548,
+                        lineNumber: 549,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1922,7 +1913,7 @@ function WidgetCard({ widget, onEdit }) {
                         children: isRateLimited ? 'Rate Limited' : 'Failed to Load'
                     }, void 0, false, {
                         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                        lineNumber: 557,
+                        lineNumber: 558,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1930,7 +1921,7 @@ function WidgetCard({ widget, onEdit }) {
                         children: widget.error
                     }, void 0, false, {
                         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                        lineNumber: 560,
+                        lineNumber: 561,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1946,20 +1937,20 @@ function WidgetCard({ widget, onEdit }) {
                                         className: "w-4 h-4 mr-2 animate-spin"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                        lineNumber: 571,
+                                        lineNumber: 572,
                                         columnNumber: 17
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$refresh$2d$cw$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__RefreshCw$3e$__["RefreshCw"], {
                                         className: "w-4 h-4 mr-2"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                        lineNumber: 573,
+                                        lineNumber: 574,
                                         columnNumber: 17
                                     }, this),
                                     "Retry Now"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                lineNumber: 564,
+                                lineNumber: 565,
                                 columnNumber: 13
                             }, this),
                             retrySeconds && retrySeconds > 5 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1971,19 +1962,19 @@ function WidgetCard({ widget, onEdit }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                lineNumber: 578,
+                                lineNumber: 579,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                        lineNumber: 563,
+                        lineNumber: 564,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                lineNumber: 547,
+                lineNumber: 548,
                 columnNumber: 9
             }, this);
         }
@@ -1999,110 +1990,127 @@ function WidgetCard({ widget, onEdit }) {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         ref: setNodeRef,
         style: style,
-        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["cn"])("glass-card p-4 transition-all duration-200 animate-fade-in", isDragging && "widget-dragging opacity-90"),
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["cn"])("glass-card p-3 sm:p-4 transition-all duration-200 animate-fade-in", isDragging && "widget-dragging opacity-90"),
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "flex items-center justify-between mb-4",
+                className: "flex items-center justify-between mb-3 sm:mb-4 gap-2",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "flex items-center gap-2",
+                        className: "flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                 ...attributes,
                                 ...listeners,
-                                className: "cursor-grab active:cursor-grabbing p-1 rounded hover:bg-secondary/50 text-muted-foreground",
+                                className: "cursor-grab active:cursor-grabbing p-0.5 sm:p-1 rounded hover:bg-secondary/50 text-muted-foreground shrink-0 touch-none",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$grip$2d$vertical$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__GripVertical$3e$__["GripVertical"], {
-                                    className: "w-4 h-4"
+                                    className: "w-3.5 h-3.5 sm:w-4 sm:h-4"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                    lineNumber: 613,
+                                    lineNumber: 614,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                lineNumber: 608,
+                                lineNumber: 609,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "min-w-0 flex-1",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                        className: "font-semibold text-sm flex items-center gap-2",
+                                        className: "font-semibold text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 truncate",
                                         children: [
-                                            widget.name,
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "truncate",
+                                                children: widget.name
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
+                                                lineNumber: 618,
+                                                columnNumber: 15
+                                            }, this),
                                             widget.connectionType === 'websocket' && widget.websocketStatus && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["cn"])("text-xs px-1.5 py-0.5 rounded font-normal flex items-center gap-1", widget.websocketStatus === 'connected' && "bg-emerald-500/10 text-emerald-500", widget.websocketStatus === 'connecting' && "bg-blue-500/10 text-blue-500", widget.websocketStatus === 'disconnected' && "bg-orange-500/10 text-orange-500", widget.websocketStatus === 'error' && "bg-destructive/10 text-destructive"),
+                                                className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["cn"])("text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 rounded font-normal flex items-center gap-0.5 sm:gap-1 shrink-0", widget.websocketStatus === 'connected' && "bg-emerald-500/10 text-emerald-500", widget.websocketStatus === 'connecting' && "bg-blue-500/10 text-blue-500", widget.websocketStatus === 'disconnected' && "bg-orange-500/10 text-orange-500", widget.websocketStatus === 'error' && "bg-destructive/10 text-destructive"),
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["cn"])("w-1.5 h-1.5 rounded-full animate-pulse", widget.websocketStatus === 'connected' && "bg-emerald-500", widget.websocketStatus === 'connecting' && "bg-blue-500", widget.websocketStatus === 'disconnected' && "bg-orange-500", widget.websocketStatus === 'error' && "bg-destructive")
+                                                        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["cn"])("w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full animate-pulse", widget.websocketStatus === 'connected' && "bg-emerald-500", widget.websocketStatus === 'connecting' && "bg-blue-500", widget.websocketStatus === 'disconnected' && "bg-orange-500", widget.websocketStatus === 'error' && "bg-destructive")
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                                        lineNumber: 626,
+                                                        lineNumber: 627,
                                                         columnNumber: 19
                                                     }, this),
-                                                    widget.websocketStatus === 'connected' && 'Live',
-                                                    widget.websocketStatus === 'connecting' && 'Connecting...',
-                                                    widget.websocketStatus === 'disconnected' && 'Disconnected',
-                                                    widget.websocketStatus === 'error' && 'Error'
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "hidden xs:inline",
+                                                        children: [
+                                                            widget.websocketStatus === 'connected' && 'Live',
+                                                            widget.websocketStatus === 'connecting' && 'Connecting...',
+                                                            widget.websocketStatus === 'disconnected' && 'Disconnected',
+                                                            widget.websocketStatus === 'error' && 'Error'
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
+                                                        lineNumber: 634,
+                                                        columnNumber: 19
+                                                    }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                                lineNumber: 619,
+                                                lineNumber: 620,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                        lineNumber: 616,
+                                        lineNumber: 617,
                                         columnNumber: 13
                                     }, this),
                                     widget.lastUpdated && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "text-xs text-muted-foreground",
-                                        children: [
-                                            "Last updated: ",
-                                            widget.lastUpdated
-                                        ]
-                                    }, void 0, true, {
+                                        className: "text-[10px] sm:text-xs text-muted-foreground truncate",
+                                        children: new Date(widget.lastUpdated).toLocaleTimeString([], {
+                                            hour: '2-digit',
+                                            minute: '2-digit'
+                                        })
+                                    }, void 0, false, {
                                         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                        lineNumber: 641,
+                                        lineNumber: 644,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                lineNumber: 615,
+                                lineNumber: 616,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                        lineNumber: 607,
+                        lineNumber: 608,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "flex items-center gap-1",
+                        className: "flex items-center gap-0.5 sm:gap-1 shrink-0",
                         children: [
                             widget.isLoading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$loader$2d$circle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Loader2$3e$__["Loader2"], {
-                                className: "w-4 h-4 animate-spin text-muted-foreground"
+                                className: "w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin text-muted-foreground"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                lineNumber: 650,
+                                lineNumber: 653,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
                                 variant: "ghost",
                                 size: "icon",
-                                className: "h-8 w-8",
+                                className: "h-7 w-7 sm:h-8 sm:w-8",
                                 onClick: ()=>fetchData(true),
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$refresh$2d$cw$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__RefreshCw$3e$__["RefreshCw"], {
-                                    className: "w-4 h-4"
+                                    className: "w-3 h-3 sm:w-4 sm:h-4"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                    lineNumber: 658,
+                                    lineNumber: 661,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                lineNumber: 652,
+                                lineNumber: 655,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DropdownMenu"], {
@@ -2112,22 +2120,22 @@ function WidgetCard({ widget, onEdit }) {
                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
                                             variant: "ghost",
                                             size: "icon",
-                                            className: "h-8 w-8",
+                                            className: "h-7 w-7 sm:h-8 sm:w-8",
                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$settings$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Settings$3e$__["Settings"], {
-                                                className: "w-4 h-4"
+                                                className: "w-3 h-3 sm:w-4 sm:h-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                                lineNumber: 663,
+                                                lineNumber: 666,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                            lineNumber: 662,
+                                            lineNumber: 665,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                        lineNumber: 661,
+                                        lineNumber: 664,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DropdownMenuContent"], {
@@ -2141,19 +2149,19 @@ function WidgetCard({ widget, onEdit }) {
                                                         className: "w-4 h-4 mr-2"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                                        lineNumber: 668,
+                                                        lineNumber: 671,
                                                         columnNumber: 17
                                                     }, this),
                                                     "Edit Widget"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                                lineNumber: 667,
+                                                lineNumber: 670,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DropdownMenuSeparator"], {}, void 0, false, {
                                                 fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                                lineNumber: 671,
+                                                lineNumber: 674,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DropdownMenuItem"], {
@@ -2164,45 +2172,45 @@ function WidgetCard({ widget, onEdit }) {
                                                         className: "w-4 h-4 mr-2"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                                        lineNumber: 676,
+                                                        lineNumber: 679,
                                                         columnNumber: 17
                                                     }, this),
                                                     "Remove Widget"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                                lineNumber: 672,
+                                                lineNumber: 675,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                        lineNumber: 666,
+                                        lineNumber: 669,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                                lineNumber: 660,
+                                lineNumber: 663,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                        lineNumber: 648,
+                        lineNumber: 651,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-                lineNumber: 606,
+                lineNumber: 607,
                 columnNumber: 7
             }, this),
             renderContent()
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/dashboard/WidgetCard.tsx",
-        lineNumber: 598,
+        lineNumber: 599,
         columnNumber: 5
     }, this);
 }
@@ -6699,17 +6707,17 @@ function Dashboard() {
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
                 className: "border-b border-border/50 bg-card/50 backdrop-blur-xl sticky top-0 z-40",
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "container mx-auto px-4 py-4",
+                    className: "container mx-auto px-3 sm:px-4 py-3 sm:py-4",
                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "flex items-center justify-between",
+                        className: "flex items-center justify-between gap-2",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "flex items-center gap-3",
+                                className: "flex items-center gap-2 sm:gap-3 min-w-0",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "p-2 rounded-lg bg-primary/10 border border-primary/20",
+                                        className: "p-1.5 sm:p-2 rounded-lg bg-primary/10 border border-primary/20 shrink-0",
                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$activity$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Activity$3e$__["Activity"], {
-                                            className: "w-6 h-6 text-primary"
+                                            className: "w-5 h-5 sm:w-6 sm:h-6 text-primary"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/dashboard/Dashboard.tsx",
                                             lineNumber: 75,
@@ -6721,9 +6729,10 @@ function Dashboard() {
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "min-w-0",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
-                                                className: "text-xl font-bold",
+                                                className: "text-base sm:text-xl font-bold truncate",
                                                 children: "Finance Dashboard"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/dashboard/Dashboard.tsx",
@@ -6731,12 +6740,12 @@ function Dashboard() {
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                className: "text-sm text-muted-foreground",
+                                                className: "text-xs sm:text-sm text-muted-foreground hidden xs:block",
                                                 children: [
                                                     widgets.length,
-                                                    " active widget",
+                                                    " widget",
                                                     widgets.length !== 1 ? 's' : '',
-                                                    " • Real-time data"
+                                                    " • Real-time"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/dashboard/Dashboard.tsx",
@@ -6756,7 +6765,7 @@ function Dashboard() {
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "flex items-center gap-2",
+                                className: "flex items-center gap-1 sm:gap-2 shrink-0",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ThemeToggle$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ThemeToggle"], {}, void 0, false, {
                                         fileName: "[project]/src/components/dashboard/Dashboard.tsx",
@@ -6767,7 +6776,7 @@ function Dashboard() {
                                         variant: "outline",
                                         size: "icon",
                                         onClick: ()=>setIsCacheStatsOpen(true),
-                                        className: "hidden sm:flex",
+                                        className: "hidden md:flex h-9 w-9",
                                         title: "Cache Statistics",
                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chart$2d$column$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BarChart3$3e$__["BarChart3"], {
                                             className: "w-4 h-4"
@@ -6785,7 +6794,7 @@ function Dashboard() {
                                         variant: "outline",
                                         size: "icon",
                                         onClick: ()=>setIsApiKeyModalOpen(true),
-                                        className: "hidden sm:flex",
+                                        className: "hidden md:flex h-9 w-9",
                                         title: "API Keys",
                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$key$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Key$3e$__["Key"], {
                                             className: "w-4 h-4"
@@ -6802,7 +6811,7 @@ function Dashboard() {
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
                                         variant: "outline",
                                         onClick: ()=>setIsExportImportOpen(true),
-                                        className: "gap-2",
+                                        className: "gap-1.5 h-9 px-2 sm:px-4",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$file$2d$json$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__FileJson$3e$__["FileJson"], {
                                                 className: "w-4 h-4"
@@ -6812,7 +6821,7 @@ function Dashboard() {
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                className: "hidden sm:inline",
+                                                className: "hidden lg:inline",
                                                 children: "Export/Import"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/dashboard/Dashboard.tsx",
@@ -6828,7 +6837,7 @@ function Dashboard() {
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
                                         variant: "outline",
                                         onClick: ()=>setIsTemplatesOpen(true),
-                                        className: "gap-2",
+                                        className: "gap-1.5 h-9 px-2 sm:px-4",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$sparkles$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Sparkles$3e$__["Sparkles"], {
                                                 className: "w-4 h-4"
@@ -6838,7 +6847,7 @@ function Dashboard() {
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                className: "hidden sm:inline",
+                                                className: "hidden lg:inline",
                                                 children: "Templates"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/dashboard/Dashboard.tsx",
@@ -6853,7 +6862,7 @@ function Dashboard() {
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
                                         onClick: ()=>setIsModalOpen(true),
-                                        className: "gap-2",
+                                        className: "gap-1.5 h-9 px-2 sm:px-4",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$plus$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Plus$3e$__["Plus"], {
                                                 className: "w-4 h-4"
@@ -6899,14 +6908,14 @@ function Dashboard() {
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
-                className: "container mx-auto px-4 py-6",
+                className: "container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6",
                 children: widgets.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "flex flex-col items-center justify-center min-h-[60vh] text-center",
+                    className: "flex flex-col items-center justify-center min-h-[50vh] sm:min-h-[60vh] text-center px-4",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "p-6 rounded-2xl bg-secondary/30 border border-border/50 mb-6",
+                            className: "p-4 sm:p-6 rounded-2xl bg-secondary/30 border border-border/50 mb-4 sm:mb-6",
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$layout$2d$grid$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__LayoutGrid$3e$__["LayoutGrid"], {
-                                className: "w-16 h-16 text-muted-foreground"
+                                className: "w-12 h-12 sm:w-16 sm:h-16 text-muted-foreground"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/dashboard/Dashboard.tsx",
                                 lineNumber: 115,
@@ -6918,7 +6927,7 @@ function Dashboard() {
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                            className: "text-2xl font-semibold mb-2",
+                            className: "text-xl sm:text-2xl font-semibold mb-2",
                             children: "Build Your Finance Dashboard"
                         }, void 0, false, {
                             fileName: "[project]/src/components/dashboard/Dashboard.tsx",
@@ -6926,7 +6935,7 @@ function Dashboard() {
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                            className: "text-muted-foreground max-w-md mb-6",
+                            className: "text-sm sm:text-base text-muted-foreground max-w-md mb-4 sm:mb-6",
                             children: "Create custom widgets by connecting to any finance API. Track stocks, crypto, market data, and more in real-time."
                         }, void 0, false, {
                             fileName: "[project]/src/components/dashboard/Dashboard.tsx",
@@ -6934,7 +6943,7 @@ function Dashboard() {
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "flex flex-col sm:flex-row gap-3",
+                            className: "flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
                                     variant: "outline",
@@ -6994,7 +7003,7 @@ function Dashboard() {
                         items: sortedWidgets.map((w)=>w.id),
                         strategy: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$dnd$2d$kit$2f$sortable$2f$dist$2f$sortable$2e$esm$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["rectSortingStrategy"],
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4",
+                            className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4",
                             children: [
                                 sortedWidgets.map((widget)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$dashboard$2f$WidgetCard$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["WidgetCard"], {
                                         widget: widget,
@@ -7006,12 +7015,12 @@ function Dashboard() {
                                     }, this)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                     onClick: ()=>setIsModalOpen(true),
-                                    className: "glass-card p-6 border-dashed border-2 border-border/50 hover:border-primary/50  flex flex-col items-center justify-center gap-3 min-h-[200px]  transition-all duration-300 hover:bg-primary/5 group",
+                                    className: "glass-card p-4 sm:p-6 border-dashed border-2 border-border/50 hover:border-primary/50  flex flex-col items-center justify-center gap-2 sm:gap-3 min-h-[180px] sm:min-h-[200px]  transition-all duration-300 hover:bg-primary/5 group",
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "p-3 rounded-full bg-secondary/50 group-hover:bg-primary/10 transition-colors",
+                                            className: "p-2 sm:p-3 rounded-full bg-secondary/50 group-hover:bg-primary/10 transition-colors",
                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$plus$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Plus$3e$__["Plus"], {
-                                                className: "w-6 h-6 text-muted-foreground group-hover:text-primary transition-colors"
+                                                className: "w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground group-hover:text-primary transition-colors"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/dashboard/Dashboard.tsx",
                                                 lineNumber: 156,
@@ -7023,7 +7032,7 @@ function Dashboard() {
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                            className: "text-sm text-muted-foreground group-hover:text-foreground transition-colors",
+                                            className: "text-xs sm:text-sm text-muted-foreground group-hover:text-foreground transition-colors text-center px-2",
                                             children: "Connect to a finance API and create a custom widget"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/dashboard/Dashboard.tsx",

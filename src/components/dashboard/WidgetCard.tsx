@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, RefreshCw, Trash2, Settings, AlertCircle, Loader2, Pencil, Search, ChevronLeft, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
@@ -45,8 +45,18 @@ interface CandlestickData {
   close: number;
 }
 
-// Custom Candlestick shape
-const Candlestick = (props: any) => {
+interface CandlestickProps {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  open: number;
+  close: number;
+  high: number;
+  low: number;
+}
+
+const Candlestick = (props: CandlestickProps) => {
   const { x, y, width, height, open, close, high, low } = props;
   const isGreen = close >= open;
   const color = isGreen ? 'hsl(var(--success))' : 'hsl(var(--destructive))';
@@ -55,7 +65,6 @@ const Candlestick = (props: any) => {
   
   return (
     <g>
-      {/* Wick */}
       <line
         x1={x + width / 2}
         y1={high}
@@ -64,7 +73,6 @@ const Candlestick = (props: any) => {
         stroke={color}
         strokeWidth={1}
       />
-      {/* Body */}
       <rect
         x={x}
         y={bodyY}
@@ -82,7 +90,6 @@ export function WidgetCard({ widget, onEdit }: WidgetCardProps) {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const wsManagerRef = useRef<ReturnType<typeof wsPool.get> | null>(null);
   
-  // Table state
   const [tableSearch, setTableSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [sortColumn, setSortColumn] = useState<string | null>(null);
@@ -103,12 +110,12 @@ export function WidgetCard({ widget, onEdit }: WidgetCardProps) {
     transition,
   };
   
-  const fetchData = async (skipCache: boolean = false) => {
+  const fetchData = useCallback(async (skipCache: boolean = false) => {
     setWidgetLoading(widget.id, true);
     
     const result = await fetchWithCache(widget.apiUrl, {
       useCache: !skipCache,
-      cacheTTL: widget.refreshInterval * 1000, // Cache for refresh interval duration
+      cacheTTL: widget.refreshInterval * 1000,
       retryOnRateLimit: false,
       maxRetries: 2,
     });
@@ -122,9 +129,9 @@ export function WidgetCard({ widget, onEdit }: WidgetCardProps) {
     }
     
     setWidgetLoading(widget.id, false);
-  };
+  }, [widget.id, widget.apiUrl, widget.refreshInterval, setWidgetLoading, setWidgetData, setWidgetError]);
 
-  const setupWebSocket = () => {
+  const setupWebSocket = useCallback(() => {
     if (widget.connectionType !== 'websocket' || !isWebSocketURL(widget.apiUrl)) return;
 
     setWidgetLoading(widget.id, true);
@@ -152,9 +159,9 @@ export function WidgetCard({ widget, onEdit }: WidgetCardProps) {
         setWidgetLoading(widget.id, false);
       },
     });
-  };
+  }, [widget.id, widget.apiUrl, widget.connectionType, setWidgetLoading, setWebSocketStatus, setWidgetData, setWidgetError]);
 
-  const cleanup = () => {
+  const cleanup = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
@@ -163,10 +170,10 @@ export function WidgetCard({ widget, onEdit }: WidgetCardProps) {
       wsPool.disconnect(widget.id);
       wsManagerRef.current = null;
     }
-  };
+  }, [widget.id]);
   
   useEffect(() => {
-    cleanup(); // Clean up any existing connections
+    cleanup();
 
     if (widget.connectionType === 'websocket') {
       setupWebSocket();
@@ -176,9 +183,8 @@ export function WidgetCard({ widget, onEdit }: WidgetCardProps) {
     }
 
     return () => cleanup();
-  }, [widget.apiUrl, widget.refreshInterval, widget.connectionType]);
+  }, [widget.apiUrl, widget.refreshInterval, widget.connectionType, setupWebSocket, fetchData, cleanup]);
 
-  // Reset page when search changes
   useEffect(() => {
     setCurrentPage(1);
   }, [tableSearch]);
@@ -238,7 +244,6 @@ export function WidgetCard({ widget, onEdit }: WidgetCardProps) {
     
     const columns = Object.keys(tableData[0] || {}).slice(0, 5);
     
-    // Filter data based on search
     const filteredData = tableSearch
       ? tableData.filter((row) =>
           columns.some((col) =>
@@ -280,7 +285,6 @@ export function WidgetCard({ widget, onEdit }: WidgetCardProps) {
       }
     };
     
-    // Pagination
     const totalPages = Math.ceil(sortedData.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const paginatedData = sortedData.slice(startIndex, startIndex + itemsPerPage);
@@ -378,7 +382,6 @@ export function WidgetCard({ widget, onEdit }: WidgetCardProps) {
     const chartType = widget.chartType || 'line';
     const chartInterval = widget.chartInterval || 'daily';
     
-    // Try to find numeric data for charting
     const numericFields = widget.selectedFields.filter(
       (f) => f.type === 'number' || f.type === 'string'
     );
@@ -387,12 +390,10 @@ export function WidgetCard({ widget, onEdit }: WidgetCardProps) {
       return <p className="text-muted-foreground text-sm">No numeric data for chart</p>;
     }
     
-    // Create chart data
     const chartData = numericFields.slice(0, 6).map((field, index) => {
       const value = getValueByPath(widget.data, field.path);
       const numValue = typeof value === 'number' ? value : parseFloat(String(value)) || 0;
       
-      // Generate mock OHLC data for candlestick
       const variance = numValue * 0.02;
       return {
         name: field.label.slice(0, 10),
@@ -404,7 +405,6 @@ export function WidgetCard({ widget, onEdit }: WidgetCardProps) {
       };
     });
 
-    // Interval selector
     const intervals: { value: ChartInterval; label: string }[] = [
       { value: 'daily', label: 'D' },
       { value: 'weekly', label: 'W' },
@@ -476,14 +476,15 @@ export function WidgetCard({ widget, onEdit }: WidgetCardProps) {
                 <Bar
                   dataKey="close"
                   fill="hsl(var(--primary))"
-                  shape={(props: any) => {
-                    const { x, y, width, payload } = props;
+                  shape={(props: { x: number; y: number; width: number; height: number; payload: CandlestickData; background?: { height: number } }) => {
+                    const { x, y, width, height, payload } = props;
                     const yScale = props.background?.height / (Math.max(...chartData.map(d => d.high)) - Math.min(...chartData.map(d => d.low))) || 1;
                     return (
                       <Candlestick
                         x={x}
                         y={y}
                         width={width}
+                        height={height}
                         open={payload.open}
                         close={payload.close}
                         high={payload.high}
@@ -599,68 +600,70 @@ export function WidgetCard({ widget, onEdit }: WidgetCardProps) {
       ref={setNodeRef}
       style={style}
       className={cn(
-        "glass-card p-4 transition-all duration-200 animate-fade-in",
+        "glass-card p-3 sm:p-4 transition-all duration-200 animate-fade-in",
         isDragging && "widget-dragging opacity-90"
       )}
     >
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between mb-3 sm:mb-4 gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
           <button
             {...attributes}
             {...listeners}
-            className="cursor-grab active:cursor-grabbing p-1 rounded hover:bg-secondary/50 text-muted-foreground"
+            className="cursor-grab active:cursor-grabbing p-0.5 sm:p-1 rounded hover:bg-secondary/50 text-muted-foreground shrink-0 touch-none"
           >
-            <GripVertical className="w-4 h-4" />
+            <GripVertical className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
-          <div>
-            <h3 className="font-semibold text-sm flex items-center gap-2">
-              {widget.name}
+          <div className="min-w-0 flex-1">
+            <h3 className="font-semibold text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 truncate">
+              <span className="truncate">{widget.name}</span>
               {widget.connectionType === 'websocket' && widget.websocketStatus && (
                 <span className={cn(
-                  "text-xs px-1.5 py-0.5 rounded font-normal flex items-center gap-1",
+                  "text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 rounded font-normal flex items-center gap-0.5 sm:gap-1 shrink-0",
                   widget.websocketStatus === 'connected' && "bg-emerald-500/10 text-emerald-500",
                   widget.websocketStatus === 'connecting' && "bg-blue-500/10 text-blue-500",
                   widget.websocketStatus === 'disconnected' && "bg-orange-500/10 text-orange-500",
                   widget.websocketStatus === 'error' && "bg-destructive/10 text-destructive"
                 )}>
                   <span className={cn(
-                    "w-1.5 h-1.5 rounded-full animate-pulse",
+                    "w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full animate-pulse",
                     widget.websocketStatus === 'connected' && "bg-emerald-500",
                     widget.websocketStatus === 'connecting' && "bg-blue-500",
                     widget.websocketStatus === 'disconnected' && "bg-orange-500",
                     widget.websocketStatus === 'error' && "bg-destructive"
                   )} />
-                  {widget.websocketStatus === 'connected' && 'Live'}
-                  {widget.websocketStatus === 'connecting' && 'Connecting...'}
-                  {widget.websocketStatus === 'disconnected' && 'Disconnected'}
-                  {widget.websocketStatus === 'error' && 'Error'}
+                  <span className="hidden xs:inline">
+                    {widget.websocketStatus === 'connected' && 'Live'}
+                    {widget.websocketStatus === 'connecting' && 'Connecting...'}
+                    {widget.websocketStatus === 'disconnected' && 'Disconnected'}
+                    {widget.websocketStatus === 'error' && 'Error'}
+                  </span>
                 </span>
               )}
             </h3>
             {widget.lastUpdated && (
-              <p className="text-xs text-muted-foreground">
-                Last updated: {widget.lastUpdated}
+              <p className="text-[10px] sm:text-xs text-muted-foreground truncate">
+                {new Date(widget.lastUpdated).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </p>
             )}
           </div>
         </div>
         
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
           {widget.isLoading && (
-            <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+            <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin text-muted-foreground" />
           )}
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8"
+            className="h-7 w-7 sm:h-8 sm:w-8"
             onClick={() => fetchData(true)}
           >
-            <RefreshCw className="w-4 h-4" />
+            <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4" />
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <Settings className="w-4 h-4" />
+              <Button variant="ghost" size="icon" className="h-7 w-7 sm:h-8 sm:w-8">
+                <Settings className="w-3 h-3 sm:w-4 sm:h-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="glass-card">

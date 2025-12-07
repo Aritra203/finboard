@@ -1,5 +1,3 @@
-// API Response Cache with TTL support
-
 interface CacheEntry<T> {
   data: T;
   timestamp: number;
@@ -15,11 +13,8 @@ interface RateLimitInfo {
 class APICache {
   private cache: Map<string, CacheEntry<unknown>> = new Map();
   private rateLimits: Map<string, RateLimitInfo> = new Map();
-  private defaultTTL: number = 30000; // 30 seconds default
+  private defaultTTL: number = 30000;
 
-  /**
-   * Get cached data if valid
-   */
   get<T>(url: string): T | null {
     const entry = this.cache.get(url);
     if (!entry) return null;
@@ -33,9 +28,6 @@ class APICache {
     return entry.data as T;
   }
 
-  /**
-   * Set cache entry with TTL
-   */
   set<T>(url: string, data: T, ttlMs?: number): void {
     const now = Date.now();
     this.cache.set(url, {
@@ -45,9 +37,6 @@ class APICache {
     });
   }
 
-  /**
-   * Check if URL is rate limited
-   */
   isRateLimited(url: string): { limited: boolean; retryAfter?: number } {
     const domain = this.extractDomain(url);
     const info = this.rateLimits.get(domain);
@@ -65,9 +54,6 @@ class APICache {
     return { limited: true, retryAfter: Math.ceil(timeLeft / 1000) };
   }
 
-  /**
-   * Mark URL domain as rate limited
-   */
   setRateLimited(url: string, retryAfterSeconds: number = 60): void {
     const domain = this.extractDomain(url);
     this.rateLimits.set(domain, {
@@ -77,17 +63,11 @@ class APICache {
     });
   }
 
-  /**
-   * Clear rate limit for a domain
-   */
   clearRateLimit(url: string): void {
     const domain = this.extractDomain(url);
     this.rateLimits.delete(domain);
   }
 
-  /**
-   * Get cache statistics
-   */
   getStats(): { cacheSize: number; rateLimitedDomains: string[] } {
     return {
       cacheSize: this.cache.size,
@@ -95,16 +75,10 @@ class APICache {
     };
   }
 
-  /**
-   * Clear all cache
-   */
   clear(): void {
     this.cache.clear();
   }
 
-  /**
-   * Clear expired entries
-   */
   cleanup(): void {
     const now = Date.now();
     for (const [key, entry] of this.cache.entries()) {
@@ -114,9 +88,6 @@ class APICache {
     }
   }
 
-  /**
-   * Extract domain from URL for rate limiting
-   */
   private extractDomain(url: string): string {
     try {
       const urlObj = new URL(url);
@@ -127,10 +98,8 @@ class APICache {
   }
 }
 
-// Singleton instance
 export const apiCache = new APICache();
 
-// Cleanup interval (every 5 minutes)
 if (typeof window !== 'undefined') {
   setInterval(() => apiCache.cleanup(), 5 * 60 * 1000);
 }

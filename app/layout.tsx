@@ -17,6 +17,12 @@ export const metadata: Metadata = {
   title: 'FinBoard - Customizable Finance Dashboard',
   description: 'Build your own real-time finance monitoring dashboard with customizable widgets. Track stocks, crypto, and market data.',
   authors: [{ name: 'FinBoard' }],
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+  },
   openGraph: {
     title: 'FinBoard - Finance Dashboard',
     description: 'Create custom widgets by connecting to any finance API. Track real-time market data.',

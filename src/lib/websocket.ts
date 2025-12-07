@@ -172,7 +172,6 @@ export class WebSocketPool {
 // Singleton pool instance
 export const wsPool = new WebSocketPool();
 
-// Helper to check if URL is a WebSocket URL
 export function isWebSocketURL(url: string): boolean {
   try {
     const urlObj = new URL(url);
@@ -182,7 +181,6 @@ export function isWebSocketURL(url: string): boolean {
   }
 }
 
-// Helper to convert HTTP URL to WebSocket URL (if applicable)
 export function toWebSocketURL(url: string): string | null {
   try {
     const urlObj = new URL(url);

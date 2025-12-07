@@ -147,9 +147,6 @@ export async function testApiConnection(url: string): Promise<{ success: boolean
   }
 }
 
-/**
- * Fetch data from API with caching and rate limit handling
- */
 export async function fetchWithCache<T = unknown>(
   url: string, 
   options: FetchOptions = {}
@@ -245,17 +242,10 @@ export async function fetchWithCache<T = unknown>(
   };
 }
 
-/**
- * Clear cache for a specific URL
- */
 export function clearCacheForUrl(url: string): void {
-  // The cache doesn't expose a delete method, so we'll add one
   apiCache.clear();
 }
 
-/**
- * Get cache statistics
- */
 export function getCacheStats() {
   return apiCache.getStats();
 }
